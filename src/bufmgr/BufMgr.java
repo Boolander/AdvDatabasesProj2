@@ -31,8 +31,9 @@ public class BufMgr implements GlobalConst {
    * @param numframes number of frames in the buffer pool
    */
   public BufMgr(int numframes) {
-
-    throw new UnsupportedOperationException("Not implemented");
+    //throw new UnsupportedOperationException("Not implemented")
+	//initialization of buffer_pool array. This will store each 'frame'
+	Page[] buffer_pool = new Page()[numframes];
 
   } // public BufMgr(int numframes)
 
@@ -67,7 +68,7 @@ public class BufMgr implements GlobalConst {
   public void pinPage(PageId pageno, Page mempage, int contents) {
 
 	throw new UnsupportedOperationException("Not implemented");
-
+	
   } // public void pinPage(PageId pageno, Page page, int contents)
   
   /**
