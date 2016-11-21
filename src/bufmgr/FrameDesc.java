@@ -15,7 +15,7 @@ public class FrameDesc{
     protected int pin_count;
     protected boolean valid;
     protected boolean refbit;
-    protected PageId pageno; 
+    protected PageId pageno;
 	
 	public FrameDesc(){
 		
