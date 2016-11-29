@@ -139,7 +139,7 @@ public class BufMgr implements GlobalConst {
         // can be reclaimed.  Very bad news.
         throw new IllegalStateException(); 
       }
-    }
+    
     else{
       // The page is already mapped to a frame.  Pin it and set
       // mempage to refer to it.
