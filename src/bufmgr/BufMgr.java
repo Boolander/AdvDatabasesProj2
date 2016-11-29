@@ -50,7 +50,7 @@ public class BufMgr implements GlobalConst {
 	  }
 	  
 	  //creates an instance of replacer and initializes hashMaps
-	  replacer = new ReplacerImpl(this);
+	  replacer = new ReplacerImpl();
 	  page_to_frame = new HashMap<>();
     frame_to_page = new HashMap<>();
     
@@ -86,6 +86,7 @@ public class BufMgr implements GlobalConst {
    */
   public void pinPage(PageId pageno, Page mempage, int contents) {
 
+<<<<<<< HEAD
 	Integer frame_num = page_to_frame.get(pageno.pid);
 	
 	if (frame_num == null){
@@ -145,6 +146,62 @@ public class BufMgr implements GlobalConst {
       frametab[frame_num].pin_count++;  
       mempage.setPage(buffer_pool[frame_num]);
     }
+=======
+      Integer Frame_num = page_to_frame.get(pageno.pid);
+      if (Frame_num == null){
+		
+		  //there was no frame number, so now we need to pick one
+			int frame_num = replacer.pickVictim();
+            if (frame_num != -1) {
+                // Found an empty frame
+                if ((frametab[frame_num].valid) && (frametab[frame_num].dirty)) {
+                    // The frame had a page in it that became dirty,
+                    // so write it out to the disk before using the frame.
+                    Minibase.DiskManager.write_page(frametab[frame_num].pageno, buffer_pool[frame_num]);
+                    frametab[frame_num].dirty = false;
+                }
+
+                if (contents == PIN_DISKIO) {
+                    Page disk_page = new Page();
+                    Minibase.DiskManager.read_page(pageno, disk_page);
+                    buffer_pool[frame_num].copyPage(disk_page);
+                    mempage.setPage(buffer_pool[frame_num]);
+                    frametab[frame_num].pin_count++;
+                    frametab[frame_num].valid = true;
+                    frametab[frame_num].dirty = false;
+                    frametab[frame_num].refbit = false;
+                    frametab[frame_num].pageno = new PageId(pageno.pid);
+                    addToHashMap(pageno.pid, frame_num);
+                } else if (contents == PIN_MEMCPY) {
+                    buffer_pool[frame_num].copyPage(mempage);
+                    mempage.setPage(buffer_pool[frame_num]);
+                    frametab[frame_num].pin_count++;
+                    frametab[frame_num].valid = true;
+                    frametab[frame_num].dirty = false;
+                    frametab[frame_num].refbit = false;
+                    frametab[frame_num].pageno = new PageId(pageno.pid);
+                    addToHashMap(pageno.pid, frame_num);
+                } else if (contents == PIN_NOOP) {
+                    // No operation needed
+                } else {
+                    // Received an invalid operation
+                    throw new IllegalArgumentException();
+                }
+
+            }
+                else{
+                    // Buffer pool is completely full and there are no slots that
+                    // can be reclaimed.  Very bad news.
+                    throw new IllegalStateException();
+                }
+            }
+      else{
+        // The page is already mapped to a frame.  Pin it and set
+        // mempage to refer to it.
+        frametab[Frame_num].pin_count++;
+        mempage.setPage(buffer_pool[Frame_num]);
+      }
+>>>>>>> 74b9783535aa557a5d78ce24b1882849bf40bd75
   } // public void pinPage(PageId pageno, Page page, int contents)
   
   private void addToHashMap(int page, int frame)
@@ -243,7 +300,7 @@ public class BufMgr implements GlobalConst {
 
     Integer frame_num = page_to_frame.get(pageno.pid);
     
-    if (frame_num != null && frametab[frame_num].pin_count >0){ 
+    if (frame_num != null && frametab[frame_num].pin_count >0){
     	throw new IllegalArgumentException();
     }
     else{
