@@ -52,7 +52,7 @@ public class BufMgr implements GlobalConst {
 	  //creates an instance of replacer and initializes hashMaps
 	  replacer = new ReplacerImpl(this);
 	  page_to_frame = new HashMap<>();
-    frame_to_page - new HashMap<>();
+    frame_to_page = new HashMap<>();
     
   } // public BufMgr(int numframes)
 
