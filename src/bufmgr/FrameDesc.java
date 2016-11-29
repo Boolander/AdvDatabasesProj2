@@ -22,7 +22,7 @@ public class FrameDesc{
         dirty = false;
 		valid = false;
         pageno = null;
-        pincnt = 0;
+        pin_count = 0;
         refbit = false;
 
 	}

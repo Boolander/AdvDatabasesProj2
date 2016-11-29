@@ -2,6 +2,8 @@ package heap;
 
 import global.GlobalConst;
 import global.RID;
+import global.Minibase;
+import global.PageId;
 
 /**
  * <h3>Minibase Heap Files</h3>
@@ -13,6 +15,10 @@ import global.RID;
  */
 public class HeapFile implements GlobalConst {
 
+// I have no idea what these do yet
+  static final short DATA_PAGE = 11;
+  static final short DIR_PAGE = 12;
+  PageId headId;
   /**
    * If the given name already denotes a file, this opens it; otherwise, this
    * creates a new empty file. A null name produces a temporary heap file which

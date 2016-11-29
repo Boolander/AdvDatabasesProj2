@@ -8,6 +8,10 @@ import bufmgr.Replacer;
 
 class ReplacerImpl extends Replacer {
 	
+	protected ReplacerImpl(BufMgr bufmgr) {
+		this.frametab = bufmgr.frametab;
+    }
+	
 	public void pinPage(FrameDesc fdesc){
 		int framenum = pickVictim();
 	}
@@ -29,5 +33,17 @@ class ReplacerImpl extends Replacer {
 		}
 		
 		return return_value;
+	}
+	
+	public void unpinPage(FrameDesc fdesc){
+		
+	}
+	
+	public void freePage(FrameDesc fdesc){
+		
+	}
+	
+	public void newPage(FrameDesc fdesc){
+		
 	}
 }

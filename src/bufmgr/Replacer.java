@@ -15,10 +15,14 @@ abstract class Replacer implements GlobalConst {
   /**
    * Constructs the replacer, given the buffer manager.
    */
+   protected Replacer(){
+	   
+   }
+   /*
   protected Replacer(BufMgr bufmgr) {
     this.frametab = bufmgr.frametab;
   }
-
+*/
   /**
    * Notifies the replacer of a new page.
    */
