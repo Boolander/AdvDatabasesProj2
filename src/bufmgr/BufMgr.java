@@ -40,7 +40,7 @@ public class BufMgr implements GlobalConst {
   public BufMgr(int numframes) {
   
 	//initialization of buffer_pool array. This will store each 'frame'
-		buffer_pool = new Page()[numframes];
+		buffer_pool = new Page[numframes];
 		frametab = new FrameDesc[numframes];
 	  
 	  //populates the buffer_pool and frametab arrays
