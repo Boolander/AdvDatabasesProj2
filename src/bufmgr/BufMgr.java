@@ -23,6 +23,7 @@ import java.util.HashMap;
  * relational operators.
  * 
  * @author Stefan Gurgurich
+ * @author Christopher Booye
  */
 public class BufMgr implements GlobalConst {
 
