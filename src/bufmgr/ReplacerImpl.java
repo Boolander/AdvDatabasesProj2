@@ -41,22 +41,32 @@ class ReplacerImpl extends Replacer {
 	 */
 	public int pickVictim(){
 		int return_value = -1;
+		int counter = 0;
 		
-		for( int current = 0; current < frametab.length; current++ )
-		{
-			if(frametab[current].pin_count == 0)
-			{
-				if(frametab[current].refbit)
-				{
-					frametab[current].refbit = false;
+		for( int current = 0; current < (frametab.length*2); current++ ){
+		
+			
+			if (!frametab[counter].valid){			
+				return_value = counter;					
+			}
+				
+			else if(frametab[counter].pin_count == 0){
+			
+				if(frametab[counter].refbit){
+				
+					frametab[counter].refbit = false;
 				}
-				else //valid frametab found, set return value to it and break the loop
-				{
-				return_value = current;
+				else {       //valid frametab found, set return value to it and break the loop
+				
+				return_value = counter;
 				break;
 				}
 			}
+			
+			counter = (current + 1)%frametab.length; 
 		}
+		
+		
 		return return_value;
 	}
 	/**
