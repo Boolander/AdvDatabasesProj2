@@ -1,20 +1,25 @@
 package bufmgr;
 
-import global.GlobalConst;
-import global.Minibase;
-import global.Page;
 import global.PageId;
 
-import java.util.HashMap;
-
-//FrameDesc stores data for each indivicual frame. This data is external to the Page class.
-
+/**
+ * The FrameDesc class contains fields that describe the states of individual frames.  
+ * This data is external to the Page class.  -  Stefan  Is this line necessary?
+ * 
+ * @author Stefan Gurgurich
+ */
 public class FrameDesc{
-	
+
+	//Whether the page has been modified since it was brought into the buffer pool
 	protected boolean dirty;
+	//The number of times that the page currently in a given frame has 
+	//been requested but not released
     protected int pin_count;
+    //Whether the frame contains data which reflects the data in a disk page
     protected boolean valid;
+    //Reference bit for keeping track of page access
     protected boolean refbit;
+    //Disk Page Number
     protected PageId pageno;
 	
 	public FrameDesc(){
