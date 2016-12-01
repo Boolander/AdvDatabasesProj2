@@ -29,23 +29,32 @@ public class HeapFile implements GlobalConst {
    * requires no DB entry.
    */
   public HeapFile(String name) {
+	  
     if(name == null) {
+		// construct a temporary file
 		tempFile = true;
 		fileName = "";
 		headId = null;
 	}
 	else {
+		// Construct heapfile.
+		// Store name and attempt to get the associated pageid of
+		// the head directory.
 		tempFile = false;
 		fileName = name;
 		headId = Minibase.DiskManager.get_file_entry(fileName);
 	}
 	
 	if(headId == null){
+		// Null head id means a temporary Heap file or a new file.
+		// So create a new head directory and initialize it.
 		DirPage dirPage = new DirPage();
 		headId = Minibase.BufferManager.newPage(dirPage, 1);
 		dirPage.setCurPage(headId);
 		Minibase.BufferManager.unpinPage(headId, UNPIN_DIRTY);
+		
 		if(!tempFile){
+			// For non-temp files save to the disk.
 			Minibase.DiskManager.add_file_entry(fileName, headId);
 		}
 			
@@ -58,6 +67,8 @@ public class HeapFile implements GlobalConst {
    * object; deletes the heap file if it's temporary.
    */
   protected void finalize() throws Throwable {
+	
+	// ignore tempfile, delete files saved to disk
 	if(tempFile)
 	{
 		deleteFile();
@@ -68,27 +79,32 @@ public class HeapFile implements GlobalConst {
    * Deletes the heap file from the database, freeing all of its pages.
    */
   public void deleteFile() {
+	  
+	// Start algorithm with head directory
 	PageId dirId = new PageId(headId.pid);
 	DirPage dirPage = new DirPage();
 	
 	
 	do{
-		
+		// Pin the current directory, advance to the next one.
 		PageId currentPageId = new PageId(dirId.pid);
 		Minibase.BufferManager.pinPage(currentPageId, dirPage, PIN_DISKIO);
 		dirId = dirPage.getNextPage();
 
+		// Loop thru each directory entry and free each entry
 		for(short i=0; i < dirPage.getEntryCnt(); i++){
+			
 			PageId dataId = dirPage.getPageId(i);
 			Minibase.BufferManager.freePage(dataId);
 		}
 		
+		// Clean up the current directory.
 		Minibase.BufferManager.unpinPage(currentPageId, UNPIN_CLEAN);
 		Minibase.BufferManager.freePage(currentPageId);
-		
 	}while(dirId.pid != INVALID_PAGEID);
 	
 	if(!tempFile){
+		// Not temp so need to delete from the disk
 		Minibase.DiskManager.delete_file_entry(fileName);
 	}
 			
@@ -102,6 +118,8 @@ public class HeapFile implements GlobalConst {
   public RID insertRecord(byte[] record) throws IllegalArgumentException{
 	
 	if(record.length > (PAGE_SIZE - DataPage.HEADER_SIZE - DataPage.SLOT_SIZE)){
+		// If the record size is too big to fit we need to throw an error.
+		// Max Length is currently 1000 bytes for a data page record.
 		throw new IllegalArgumentException();
 	}
 	
@@ -113,13 +131,15 @@ public class HeapFile implements GlobalConst {
 		
 	do
 	{
-		
+		// Pin the current directory and advance to the next page.
 		currentPageId = new PageId(dirId.pid);
 		Minibase.BufferManager.pinPage(currentPageId, dirPage, PIN_DISKIO);
 		dirId = dirPage.getNextPage();
 		
+		// Loop thru each directory entry on the dir page.
 		for(short i=0; i < dirPage.getEntryCnt(); i++){
 			
+			// Verify there is room for the record and the slot
 			if(dirPage.getFreeCnt(i) >= (record.length + DataPage.SLOT_SIZE)){
 				
 				// Found space for the record to be inserted
@@ -128,6 +148,8 @@ public class HeapFile implements GlobalConst {
 				Minibase.BufferManager.pinPage(dataId, dataPage, PIN_DISKIO);
 				rid = dataPage.insertRecord(record);
 				
+				// Update the record count and free space count
+				// and then unpin the data page
 				dirPage.setRecCnt(i, dataPage.getSlotCount());
 				dirPage.setFreeCnt(i, dataPage.getFreeSpace());
 				Minibase.BufferManager.unpinPage(dataId, UNPIN_DIRTY);
