@@ -1,0 +1,112 @@
+OVERALL STATUS
+
+Overall we feel the project is complete to the best of our knowledge. We have run all included unit tests and they pass. The new code created was laid out to the specifications of the comments that were left in the skeleton code.  See below comments for files and their completion.
+
+FILE DESCRIPTIONS
+
+src/bufmgr
+BufMgr.java 
+The buffer manager provides the following Services
+Pinning Unpinning:
+	The result is the disk number pagenum should reside in a frame of the buffer pool. It also
+            has an additional pin assigned that mempage should refer to.
+Allocating and deallocating disk pages:
+Flushing pages from the Buffer pool:
+	Basic clear of the buffer pool
+Get information:
+	Get the number of unpinned buffer frames
+	Get the number of buffers
+	
+FrameDesc.java **NEW**
+The FrameDesc class contains fields that describe the states of individual frames.
+	boolean dirty - has a page been modified?
+	Int pin_count - how many pages the current frame has
+           	boolean valid - if data in the frame is reflected in the disk page
+  	boolean refbit - bit to keep track of page access 
+	PageId pageno - Disk Page Number
+
+Replacer.java 
+Abstract class for ReplacerImpl.
+
+ReplacerImpl.java **NEW**
+find a valid spot in the frametab array for page data to be entered.
+int pickVictim() - iterates through the frametab array, looking for a valid place to to insert the page   
+  data.  If no valid spot is found, return -1 and force an error.
+
+
+
+
+
+src/diskmgr
+DBDirectoryPage.java
+Untouched
+
+DBFirstPage.java
+Untouched
+
+DBHeaderPage.java
+Untouched
+
+DiskMgr.java
+The disk manager is the component of Minibase that takes care of the allocation and deallocation of pages within the database. It also performs, reads and writes of pages to and from disk, providing a logical file layer.
+
+src/global
+Convert.java 
+Untouched
+
+GlobalConst.java
+Untouched
+
+Minibase.java
+Holds the definitions for running the minibase system. Includes DiskMgr & BufrMgr
+
+Page.java
+Untouched
+
+PageId.java
+Untouched
+
+RID.java
+Untouched
+
+src/heap
+DataPage.java
+Untouched
+
+DirPage.java
+Untouched
+
+HFPage.java
+Untouched
+HeapFile.java
+A heap file is an unordered set of records, stored on a set of pages. If the given name already denotes a file, this opens it; otherwise, this creates a new empty file. A null name produces a temporary heap file which requires no DB entry.
+deleteFile() - self explanitory
+	RID insertRecord(byte[] record) - Inserts a new record into the file and returns its RID.
+	getRecCnt() - Gets the number of records in the file.
+	byte[] selectRecord(RID rid) - Reads a record from the file, given its id.
+	HeapScan openScan() - Initiates a sequential scan of heap file.
+
+HeapScan.java
+Untouched
+
+UNIT TESTING
+src/tests
+BMTest.java
+No updates needed.
+
+HFTest.java
+No updates needed.
+
+
+DIVISION OF LABOR
+
+Chris Booye, Geoff Johnson, and Stefan Gurgurich worked on the BufrMngr and the ReplacerImpl
+Zach Adam and Anthony Miele worked on the REPORT.txt and the heap. They also worked on making sure unit tests worked and program fully works.
+
+TIME SPENT ON PROJECT
+
+Geoff Johnson - 35 hours
+Stefan Gurgurich - 40 hours
+Chris Booye - 30 hours
+Zach Adam - 40 hours
+Anthony Miele - 30 hours
