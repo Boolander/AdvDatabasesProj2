@@ -7,6 +7,8 @@ import diskmgr.DiskMgr;
 /**
  * Definitions for the running Minibase system, including references to static
  * layers and database-level attributes.
+ * 
+ * @author Zachary Adam
  */
 public class Minibase {
 

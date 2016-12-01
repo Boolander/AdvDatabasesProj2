@@ -19,19 +19,7 @@ class ReplacerImpl extends Replacer {
 	protected ReplacerImpl(BufMgr bufmgr) {
 		this.frametab = bufmgr.frametab;
     }
-	
-	/**
-	 * pinPage
-	 * 
-	 * Geoff, I need you to explain this.  All this does is call pickVictim and assign its
-	 * return to a variable that disappears as soon as the function is finished...
-	 * 
-	 * @param fdesc
-	 */
-	public void pinPage(FrameDesc fdesc){
-		int framenum = pickVictim();
-	}
-	
+
 	/**
 	 * pickVictim
 	 * 
@@ -44,36 +32,29 @@ class ReplacerImpl extends Replacer {
 		int counter = 0;
 		
 		for( int current = 0; current < (frametab.length*2); current++ ){
-		
-			
-			if (!frametab[counter].valid){			
-				return_value = counter;					
-			}
-				
-			else if(frametab[counter].pin_count == 0){
-			
-				if(frametab[counter].refbit){
-				
-					frametab[counter].refbit = false;
-				}
-				else {       //valid frametab found, set return value to it and break the loop
-				
-				return_value = counter;
-				break;
-				}
-			}
-			
-			counter = (current + 1)%frametab.length; 
+		  if (!frametab[counter].valid){			
+	        return_value = counter;					
+	      }
+		  else if(frametab[counter].pin_count == 0){
+			if(frametab[counter].refbit){
+			  frametab[counter].refbit = false;
+		    }
+			else { //valid frametab found, set return value to it and break the loop
+			  return_value = counter;
+			  break;
+		    }
+	      }
+		  counter = (current + 1)%frametab.length; 
 		}
-		
-		
 		return return_value;
-	}
+	  }
+	
 	/**
-	 * Currently the three functions below are not used, but they are a 
-	 * part of the base class that this class extends, so they are included 
+	 * Currently the four functions below are not used, but they are a 
+	 * part of the provided base class that this class extends, so they are included 
 	 * here for possible later use. 
 	 */
+	public void pinPage(FrameDesc fdesc){}
 	public void unpinPage(FrameDesc fdesc){}
 	public void freePage(FrameDesc fdesc){}
 	public void newPage(FrameDesc fdesc){}

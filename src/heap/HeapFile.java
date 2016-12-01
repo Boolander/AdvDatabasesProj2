@@ -12,10 +12,11 @@ import global.PageId;
  * records. Temporary heap files are used for external sorting and in other
  * relational operators. A sequential scan of a heap file (via the Scan class)
  * is the most basic access method.
+ * 
+ * @author Zachary Adam
  */
 public class HeapFile implements GlobalConst {
 
-// I have no idea what these do yet
   static final short DATA_PAGE = 11;
   static final short DIR_PAGE = 12;
   PageId headId;

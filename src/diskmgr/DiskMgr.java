@@ -14,6 +14,8 @@ import java.io.RandomAccessFile;
  * The disk manager is the component of Minibase that takes care of the
  * allocation and deallocation of pages within the database. It also performs
  * reads and writes of pages to and from disk, providing a logical file layer.
+ * 
+ * @author Zachary Adam
  */
 public class DiskMgr implements GlobalConst {
 

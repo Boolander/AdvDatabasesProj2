@@ -11,19 +11,10 @@ abstract class Replacer implements GlobalConst {
   protected FrameDesc[] frametab;
 
   // --------------------------------------------------------------------------
-
-  /**
-   * Constructs the replacer, given the buffer manager.
-   */
    protected Replacer(){
-	   
    }
-   /*
-  protected Replacer(BufMgr bufmgr) {
-    this.frametab = bufmgr.frametab;
-  }
-*/
-  /**
+ 
+   /**
    * Notifies the replacer of a new page.
    */
   public abstract void newPage(FrameDesc fdesc);
