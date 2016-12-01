@@ -11,6 +11,7 @@ import bufmgr.Replacer;
 
 class ReplacerImpl extends Replacer {
 	
+	int counter;
 	/**
 	 * Constructor
 	 * 
@@ -18,6 +19,7 @@ class ReplacerImpl extends Replacer {
 	 */
 	protected ReplacerImpl(BufMgr bufmgr) {
 		this.frametab = bufmgr.frametab;
+		counter = 0;
     }
 	
 	/**
@@ -41,7 +43,6 @@ class ReplacerImpl extends Replacer {
 	 */
 	public int pickVictim(){
 		int return_value = -1;
-		int counter = 0;
 		
 		for( int current = 0; current < (frametab.length*2); current++ ){
 		
@@ -63,7 +64,7 @@ class ReplacerImpl extends Replacer {
 				}
 			}
 			
-			counter = (current + 1)%frametab.length; 
+			counter = (counter + 1)%frametab.length; 
 		}
 		
 		
