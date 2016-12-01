@@ -4,7 +4,7 @@ import global.PageId;
 
 /**
  * The FrameDesc class contains fields that describe the states of individual frames.  
- * This data is external to the Page class.  -  Stefan  Is this line necessary?
+ * This data is external to the Page class.
  * 
  * @author Stefan Gurgurich
  */
