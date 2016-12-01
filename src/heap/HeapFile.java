@@ -72,12 +72,13 @@ public class HeapFile implements GlobalConst {
 	DirPage dirPage = new DirPage();
 	
 	
-	while(dirId.pid != INVALID_PAGEID){
+	do{
 		
 		PageId currentPageId = new PageId(dirId.pid);
 		Minibase.BufferManager.pinPage(currentPageId, dirPage, PIN_DISKIO);
-		
-		for(int i=0; i < dirPage.getEntryCnt(); i++){
+		dirId = dirPage.getNextPage();
+
+		for(short i=0; i < dirPage.getEntryCnt(); i++){
 			PageId dataId = dirPage.getPageId(i);
 			Minibase.BufferManager.freePage(dataId);
 		}
@@ -85,8 +86,7 @@ public class HeapFile implements GlobalConst {
 		Minibase.BufferManager.unpinPage(currentPageId, UNPIN_CLEAN);
 		Minibase.BufferManager.freePage(currentPageId);
 		
-		dirId = dirPage.getNextPage();
-	}
+	}while(dirId.pid != INVALID_PAGEID);
 	
 	if(!tempFile){
 		Minibase.DiskManager.delete_file_entry(fileName);
@@ -108,16 +108,17 @@ public class HeapFile implements GlobalConst {
 	// algorithm starts with the head directory
 	PageId dirId = new PageId(headId.pid);
 	DirPage dirPage = new DirPage();
-	PageId currentPageId = new PageId(dirId.pid);
+	PageId currentPageId;
 	RID rid = null;
 		
-	while(dirId.pid != INVALID_PAGEID){
+	do
+	{
 		
 		currentPageId = new PageId(dirId.pid);
 		Minibase.BufferManager.pinPage(currentPageId, dirPage, PIN_DISKIO);
 		dirId = dirPage.getNextPage();
 		
-		for(int i=0; i < dirPage.getEntryCnt(); i++){
+		for(short i=0; i < dirPage.getEntryCnt(); i++){
 			
 			if(dirPage.getFreeCnt(i) >= (record.length + DataPage.SLOT_SIZE)){
 				
@@ -141,7 +142,7 @@ public class HeapFile implements GlobalConst {
 		}
 		
 		Minibase.BufferManager.unpinPage(currentPageId, UNPIN_CLEAN);
-	}
+	} while(dirId.pid != INVALID_PAGEID);
 	
 	if(rid == null){
 		
@@ -159,7 +160,7 @@ public class HeapFile implements GlobalConst {
 		dirId = new PageId(headId.pid);
 		boolean successAdd = false;
 		
-		while(dirId.pid != INVALID_PAGEID){
+		do{
 			
 			currentPageId = new PageId(dirId.pid);
 			Minibase.BufferManager.pinPage(currentPageId, dirPage, PIN_DISKIO);
@@ -171,14 +172,14 @@ public class HeapFile implements GlobalConst {
 				dirPage.setPageId(entryCount, dataId);
 				dirPage.setRecCnt(entryCount, slotCount);
 				dirPage.setFreeCnt(entryCount, freeSpace);
-				dirPage.setEntryCnt(entryCount++);
+				dirPage.setEntryCnt(++entryCount);
 				Minibase.BufferManager.unpinPage(currentPageId, UNPIN_DIRTY);
 				successAdd = true;
 				break;
 			}
 			
 			Minibase.BufferManager.unpinPage(currentPageId, UNPIN_CLEAN);
-		}
+		} while(dirId.pid != INVALID_PAGEID);
 		
 		if(!successAdd){
 			
@@ -234,7 +235,7 @@ public class HeapFile implements GlobalConst {
    * 
    * @throws IllegalArgumentException if the rid or new record is invalid
    */
-  public void updateRecord(RID rid, byte[] newRecord) {
+  public void updateRecord(RID rid, byte[] newRecord) throws IllegalArgumentException {
 
 	if (rid == null || newRecord == null)
     {
@@ -285,7 +286,7 @@ public class HeapFile implements GlobalConst {
 	DirPage dirPage = new DirPage();
 	PageId dirId = new PageId(headId.pid);
 	
-	while(dirId.pid != INVALID_PAGEID){
+	do{
 		PageId curPageId = new PageId(dirId.pid);
 		Minibase.BufferManager.pinPage(curPageId, dirPage, PIN_DISKIO);
 		dirId = dirPage.getNextPage();
@@ -338,7 +339,7 @@ public class HeapFile implements GlobalConst {
 		}
 		
 		Minibase.BufferManager.unpinPage(curPageId, UNPIN_CLEAN);	
-	}
+	} while(dirId.pid != INVALID_PAGEID);
   }
 
   /**
@@ -350,19 +351,20 @@ public class HeapFile implements GlobalConst {
     DirPage dirPage = new DirPage();
     PageId dirId = new PageId(headId.pid);
 	
-	while(dirId.pid != INVALID_PAGEID)
+	do
     {
+		
       PageId curPageId = new PageId(dirId.pid);
       Minibase.BufferManager.pinPage(curPageId, dirPage, PIN_DISKIO);
       dirId = dirPage.getNextPage();
-
+	  
       for (short i=0; i < dirPage.getEntryCnt(); i++)
       {
         count = count + dirPage.getRecCnt(i);
       }
-      
+	    
       Minibase.BufferManager.unpinPage(curPageId, UNPIN_CLEAN);
-    }
+    } while (dirId.pid != INVALID_PAGEID);
 
     return count;
   }
